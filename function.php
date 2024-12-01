@@ -6,6 +6,10 @@ function filterRequest($requestName) {
     return htmlspecialchars(strip_tags($_POST[$requestName]));
 }
 
+function filterRequestGet($requestName) {
+    return htmlspecialchars(strip_tags($_GET[$requestName]));
+}
+
 function createJwt($userId, $key) {
     $payload = [
         'iss' => "http://yourdomain.com",
