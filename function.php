@@ -55,73 +55,212 @@ if ($decoded === null) {
 function generateRandomToken($length) {
   $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*()_+=-/?><,.>
   <{}[]}~'; $token='' ; $characterCount=strlen($characters); for ($i=0; $i < $length; $i++) { $token
-    .=$characters[rand(0, $characterCount - 1)]; } return $token; } function insertData($table, $data, $json=true) {
-    global $connect; foreach ($data as $field=> $v)
-    $ins[] = ':' . $field;
-    $ins = implode(',', $ins);
-    $fields = implode(',', array_keys($data));
-    $sql = "INSERT INTO $table ($fields) VALUES ($ins)";
+    .=$characters[rand(0, $characterCount - 1)]; } return $token; } 
+    
+    
 
-    $stmt = $connect->prepare($sql);
-    foreach ($data as $f => $v) {
-    $stmt->bindValue(':' . $f, $v);
-    }
-    $stmt->execute();
-    $count = $stmt->rowCount();
-    if ($json == true) {
-    if ($count > 0) {
-    echo json_encode(array("status" => "success" , "message" => "Added successfully"));
+function insertData($table, $data, $json = true)
+    {
+        global $connect;
+        foreach ($data as $field => $v)
+            $ins[] = ':' . $field;
+        $ins = implode(',', $ins);
+        $fields = implode(',', array_keys($data));
+        $sql = "INSERT INTO $table ($fields) VALUES ($ins)";
+    
+        $stmt = $connect->prepare($sql);
+        foreach ($data as $f => $v) {
+            $stmt->bindValue(':' . $f, $v);
+        }
+        $stmt->execute();
+        $count = $stmt->rowCount();
+        if ($json == true) {
+            if ($count > 0) {
+                echo json_encode(array("status" => "success" , "message" => "Added successfully"));
+                
+            } else {
+                echo json_encode(array("status" => "failed"));
+            }
+        }
+        return $count;
+}
 
-    } else {
-    echo json_encode(array("status" => "failed"));
-    }
-    }
-    return $count;
-    }
+function getTeacherinfo($userid){
+        global $connect;
+        $query = "SELECT `full_name`, `email`, `phone_number`, `location` FROM `teacher_account` WHERE  teacher_id = $userid " ;
+        $statement = $connect->query($query);
+        $teacher = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    function getTeacherinfo($userid){
+        if (!empty($teacher)) {
+        echo json_encode(array("status" => "success" , "data" => $teacher));
+        } else {
+        echo json_encode(["status" => "fail" , "message" => "Teacher not found."]);}
+}
+function getGrades() {
     global $connect;
-    $query = "SELECT `full_name`, `email`, `phone_number`, `location` FROM `teacher_account` WHERE teacher_id = $userid
-    " ;
-    $statement = $connect->query($query);
-    $teacher = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    if (!empty($teacher)) {
-    echo json_encode(array("status" => "success" , "data" => $teacher));
-    } else {
-    echo json_encode(["status" => "fail" , "message" => "Teacher not found."]);}
-    }
-    function getGrades() {
-    global $connect;
-    $query = "SELECT
-    g.grade_level AS GradeLevel,
-    g.grade_description AS Description,
-    COUNT(s.student_id) AS StudentNo,
-    /* COUNT(DISTINCT gr.group_id) AS GroupCount,
-    */
-    g.status AS Status
-    FROM
-    grades g
-    LEFT JOIN
-    students s
-    ON
-    s.grade_id = g.grade_id
-    /* LEFT JOIN
-    groups gr
-    ON
-    s.group_id = gr.group_id
-
-    */
-
-    GROUP BY
-    g.grade_id";
+    $query = "SELECT 
+                  g.grade_level AS GradeLevel, 
+                  g.grade_description AS Description,
+                  COUNT(s.student_id) AS StudentNo, 
+/*                   COUNT(DISTINCT gr.group_id) AS GroupCount, 
+ */                  
+                  g.status AS Status
+              FROM 
+                  grades g 
+                   LEFT JOIN 
+                  students s
+              ON 
+                  s.grade_id = g.grade_id
+                  /* LEFT JOIN 
+                  groups gr
+              ON 
+                  s.group_id = gr.group_id
+            
+              */
+              
+              GROUP BY 
+                  g.grade_id";
 
     $statement = $connect->query($query);
     $grades = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     if (!empty($grades)) {
-    echo json_encode(["status" => "success", "data" => $grades]);
+        echo json_encode(["status" => "success", "data" => $grades]);
     } else {
-    echo json_encode(["status" => "fail", "message" => "No data found."]);
+        echo json_encode(["status" => "fail", "message" => "No data found."]);
     }
+}
+function getClasses() {
+    global $connect;
+    $query = "SELECT 
+                  c.class_title AS ClassTitle, 
+                  c.grade_id AS Grade,
+                  COUNT(DISTINCT s.student_id) AS StudentNo,
+                  c.class_time AS Time
+
+              FROM 
+                  classes c 
+                   LEFT JOIN 
+                  students s
+              ON 
+                  s.grade_id = c.grade_id
+                  /* LEFT JOIN 
+                  groups gr
+              ON 
+                  s.group_id = gr.group_id
+            
+              */
+              
+              GROUP BY 
+                  c.class_id";
+
+    $statement = $connect->query($query);
+    $classes = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!empty($classes)) {
+        echo json_encode(["status" => "success", "data" => $classes]);
+    } else {
+        echo json_encode(["status" => "fail", "message" => "No data found."]);
     }
+}
+function getClasses2($class_id) {
+    global $connect;
+    $query = "SELECT 
+                   class_title,
+                   class_description, 
+                   grade_id,
+                   semester_id,
+                   subject_id
+              FROM 
+                  classes
+              WHERE
+              class_id = $class_id
+                  ";
+                  //$class_id = filterRequest("class_id");
+
+    $statement = $connect->query($query);
+    $class = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!empty($class)) {
+        echo json_encode(["status" => "success", "data" => $class]);
+    } else {
+        echo json_encode(["status" => "fail", "message" => "No data found."]);
+    }
+}
+function updateData($table, $data, $where, $json = true)
+{
+    global $connect;
+    $cols = array();
+    $vals = array();
+
+    foreach ($data as $key => $val) {
+        $vals[] = "$val";
+        $cols[] = "`$key` =  ? ";
+    }
+    $sql = "UPDATE $table SET " . implode(', ', $cols) . " WHERE $where";
+
+    $stmt = $connect->prepare($sql);
+    $stmt->execute($vals);
+    $count = $stmt->rowCount();
+    if ($json == true) {
+        if ($count > 0) {
+            echo json_encode(["status" => "success", "message" => "Class updated successfully."]);
+        } else {
+            echo json_encode(["status" => "fail", "message" => "Failed to update class."]);
+        }
+    }
+    return $count;
+}
+function getGrades2($grade_id) {
+    global $connect;
+    $query = "SELECT 
+                   grade_level,
+                   grade_description
+              FROM 
+                  grades
+              WHERE
+              grade_id = $grade_id
+                  ";
+                  //$grade_id = filterRequest("grade_id");
+
+    $statement = $connect->query($query);
+    $class = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!empty($class)) {
+        echo json_encode(["status" => "success", "data" => $class]);
+    } else {
+        echo json_encode(["status" => "fail", "message" => "No data found."]);
+    }
+}
+
+/* function updateClass($table, $data, $where, $whereParams = [], $json = true)
+{
+    global $connect;
+
+    $cols = [];
+    $vals = [];
+
+    foreach ($data as $key => $val) {
+        $cols[] = "`$key` = ?";
+        $vals[] = $val;
+    }
+
+    $vals = array_merge($vals, $whereParams);
+
+    $sql = "UPDATE `$table` SET " . implode(', ', $cols) . " WHERE $where";
+
+    $stmt = $connect->prepare($sql);
+    $stmt->execute($vals);
+
+    $count = $stmt->rowCount();
+
+    if ($json) {
+        if ($count > 0) {
+            echo json_encode(["status" => "success", "message" => "Class updated successfully."]);
+        } else {
+            echo json_encode(["status" => "fail", "message" => "No changes made or class not found."]);
+        }
+    }
+
+    return $count;
+} */
