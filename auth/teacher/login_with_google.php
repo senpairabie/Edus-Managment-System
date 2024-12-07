@@ -1,6 +1,6 @@
 <?php
-include '../connect.php';
-require '../JWT/vendor/autoload.php';
+include '../../connect.php';
+require '../../JWT/vendor/autoload.php'; 
 $full_name = filterRequest("full_name");
 $email = filterRequest("email");
 $language = filterRequest("language");
@@ -20,7 +20,7 @@ try {
                 "full_name" => $user['full_name'],
                 "phone_number" => $user['phone_number'],
                 "location" => $user['location'],
-                "token" => $jwt
+                "token" => $jwt,
             )
         ));
     } else {
@@ -39,7 +39,7 @@ try {
                 "full_name" => $user['full_name'],
                 "phone_number" => $user['phone_number'],
                 "location" => $user['location'],
-                "token" => $jwt
+                "token" => $jwt,
             )
         ));
     }

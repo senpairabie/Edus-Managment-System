@@ -15,8 +15,6 @@ if (strlen($grade_level	) < 3) {
     
     die("الرجاء ملء جميع الحقول");
 } else {
-    /* $token = generateRandomToken(100); */
-
     $data = array(
         "grade_level" => $grade_level	,
         "grade_description" => $grade_description,

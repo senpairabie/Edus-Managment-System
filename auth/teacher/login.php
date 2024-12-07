@@ -1,6 +1,6 @@
 <?php
-include '../connect.php';
-require '../JWT/vendor/autoload.php'; 
+include '../../connect.php';
+require '../../JWT/vendor/autoload.php'; 
 
 $email = filterRequest('email');
 $password = $_POST['password'];

@@ -1,5 +1,5 @@
 <?php
-include '../connect.php';
+include '../../connect.php';
 $full_name = filterRequest("full_name");
 $email = filterRequest("email");
 $phone = filterRequest("phone_number");
