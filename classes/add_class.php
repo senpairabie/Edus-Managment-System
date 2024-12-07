@@ -19,11 +19,13 @@ if (strlen($class_title) < 5) {
 } elseif (empty($class_title) || empty($Class_description) || empty($grade_id) 
 || empty($semester_id) || empty($subject_id) ) {
     
-    die("الرجاء ملء جميع الحقول");
+    $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة." : "Error: Please fill in all required fields.";
+    echo json_encode(array("status" => "fail", "message" => $errorMsg));
 } else {
     /* $token = generateRandomToken(100); */
 
     $data = array(
+        "teacher_id" => $decoded->userId,
         "class_title" => $class_title,
         "Class_description" => $Class_description,
         "grade_id" => $grade_id,

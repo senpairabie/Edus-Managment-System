@@ -22,7 +22,7 @@ function deleteData($table, $where, $json = true)
     return $count;
 }
 if (!empty($class_id)){
-deleteData("classes" , "class_id = $class_id");
+deleteData("classes" , "class_id = $class_id AND teacher_id = $decoded->userId ");
 }else{
     $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة." : "Error: Please fill in all required fields.";
     echo json_encode(array("status" => "fail", "message" => $errorMsg));

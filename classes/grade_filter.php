@@ -3,36 +3,34 @@ include "../connect.php";
 include "../access_token.php";
 
 $grade_id = filterRequest('grade_id');
-    $query = "SELECT 
-                  c.class_title AS ClassTitle, 
-                  c.grade_id AS Grade,
-                  COUNT(DISTINCT s.student_id) AS StudentNo,
-                  c.class_time AS Time
 
-              FROM 
-                  classes c 
-                   LEFT JOIN 
-                  students s
-              ON 
-                  s.grade_id = c.grade_id
-                  /* LEFT JOIN 
-                  groups gr
-              ON 
-                  s.group_id = gr.group_id
-            
-              */
-              WHERE 
-              c.grade_id = $grade_id
-              GROUP BY 
-                  c.class_id";
+ $query = "SELECT 
+              c.class_title AS ClassTitle, 
+              c.grade_id AS Grade,
+              COUNT(DISTINCT s.student_id) AS StudentNo,
+              c.class_time AS Time
+          FROM 
+              classes c 
+              LEFT JOIN 
+              students s
+          ON 
+              s.grade_id = c.grade_id
+          WHERE 
+              c.grade_id = :grade_id AND c.teacher_id = :teacher_id
+          GROUP BY 
+              c.class_id";
 
-    $statement = $connect->query($query);
-    $classes = $statement->fetchAll(PDO::FETCH_ASSOC);
+$statement = $connect->prepare($query);
+$statement->execute([
+    ':grade_id' => $grade_id,
+    ':teacher_id' => $decoded->userId
+]);
+$classes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    if (!empty($classes)) {
-        echo json_encode(["status" => "success", "data" => $classes]);
-    } else {
-        echo json_encode(["status" => "fail", "message" => "No data found."]);
-    }
+if (!empty($classes)) {
+    echo json_encode(["status" => "success", "data" => $classes]);
+} else {
+    echo json_encode(["status" => "fail", "message" => "No data found."]);
+}
 
 ?>

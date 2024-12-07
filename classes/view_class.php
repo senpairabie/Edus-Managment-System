@@ -2,5 +2,5 @@
 include '../connect.php';
 include '../access_token.php';
 
-getClasses();
+getClasses($decoded->userId);
 ?>

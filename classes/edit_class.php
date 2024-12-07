@@ -14,20 +14,23 @@ $language = filterRequest("language");
 //getClasses2($class_id);
 if (!empty($class_id)  && empty($class_title) && empty($Class_description ) 
 && empty($grade_id) && empty($semester_id) && empty($subject_id)) {
-    getClasses2($class_id); // استدعاء الدالة لجلب البيانات
+    getClasses2($class_id , $decoded->userId); // استدعاء الدالة لجلب البيانات
     exit;
 }
 if (!empty($class_title) || !empty($Class_description) || !empty($grade_id) 
 || !empty($semester_id) || !empty($subject_id)) {
 if (strlen($class_title) < 3) {
-    $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون اسم الفصل أكثر من 3 أحرف." : "Error: Class title must be more than 3 characters.";
+    $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون اسم الفصل أكثر من 3 أحرف." 
+    : "Error: Class title must be more than 3 characters.";
     echo json_encode(array("status" => "fail", "message" => $errorMsg));
 } elseif (strlen($Class_description) < 20) {
-    $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون وصف الفصل أكثر من 20 حرفًا." : "Error: Class description must be more than 20 characters.";
+    $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون وصف الفصل أكثر من 20 حرفًا." 
+    : "Error: Class description must be more than 20 characters.";
     echo json_encode(array("status" => "fail", "message" => $errorMsg));
 } elseif (empty($class_title) || empty($Class_description) || empty($grade_id) 
 || empty($semester_id) || empty($subject_id)){
-    $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة." : "Error: Please fill in all required fields.";
+    $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة." 
+    : "Error: Please fill in all required fields.";
     echo json_encode(array("status" => "fail", "message" => $errorMsg));
     exit;
 } else {

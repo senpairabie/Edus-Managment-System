@@ -5,6 +5,9 @@ define('MB', 1048576);
 function filterRequest($requestName) {
     return htmlspecialchars(strip_tags($_POST[$requestName]));
 }
+function filterRequestGet($requestName) {
+    return htmlspecialchars(strip_tags($_GET[$requestName]));
+}
 
 function createJwt($userId, $key) {
     $payload = [
@@ -130,11 +133,12 @@ function getGrades() {
         echo json_encode(["status" => "fail", "message" => "No data found."]);
     }
 }
-function getClasses() {
+function getClasses($teacher_id) {
     global $connect;
     $query = "SELECT 
                   c.class_title AS ClassTitle, 
                   c.grade_id AS Grade,
+                  c.semester_id AS Semester,
                   COUNT(DISTINCT s.student_id) AS StudentNo,
                   c.class_time AS Time
 
@@ -150,9 +154,11 @@ function getClasses() {
                   s.group_id = gr.group_id
             
               */
-              
+              WHERE 
+              c.teacher_id = $teacher_id
               GROUP BY 
                   c.class_id";
+                  
 
     $statement = $connect->query($query);
     $classes = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -163,7 +169,7 @@ function getClasses() {
         echo json_encode(["status" => "fail", "message" => "No data found."]);
     }
 }
-function getClasses2($class_id) {
+function getClasses2($class_id , $teacher_id) {
     global $connect;
     $query = "SELECT 
                    class_title,
@@ -174,7 +180,7 @@ function getClasses2($class_id) {
               FROM 
                   classes
               WHERE
-              class_id = $class_id
+              class_id = $class_id  AND teacher_id = $teacher_id
                   ";
                   //$class_id = filterRequest("class_id");
 
@@ -233,6 +239,29 @@ function getGrades2($grade_id) {
     }
 }
 
+function getHomework($homework_id) {
+    global $connect;
+    $query = "SELECT 
+                   assignment_title,
+                   class_id, 
+                   due_date
+
+              FROM 
+                  homework
+              WHERE
+              homework_id = $homework_id
+                  ";
+                  //$homework_id = filterRequest("homework_id");
+
+    $statement = $connect->query($query);
+    $homework = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!empty($homework)) {
+        echo json_encode(["status" => "success", "data" => $homework]);
+    } else {
+        echo json_encode(["status" => "fail", "message" => "No data found."]);
+    }
+}
 /* function updateClass($table, $data, $where, $whereParams = [], $json = true)
 {
     global $connect;

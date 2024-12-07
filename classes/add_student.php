@@ -17,9 +17,21 @@ if (strlen($student_name) < 5) {
     echo json_encode(array("status" => "fail", "message" => $errorMsg));
 } elseif (empty($student_name) || empty($phone_number) || empty($password) || empty($grade) || empty($gender) ) {
     
-    die("الرجاء ملء جميع الحقول");
+    $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة." : "Error: Please fill in all required fields.";
+    echo json_encode(array("status" => "fail", "message" => $errorMsg));
 } else {
     /* $token = generateRandomToken(100); */
+    $token = generateRandomToken(100);
+
+    $stat = $connect->prepare("SELECT email FROM `students` WHERE email = ?");
+    $stat->execute(array($email));
+    $cont = $stat->rowCount();
+    
+    if ($cont > 0) {
+        $errorMsg = ($language == "ar") ? "البريد الإلكتروني أو رقم الهاتف موجود بالفعل." : "Email or phone number already exists.";
+        echo json_encode(array("status" => "fail", "message" => $errorMsg));
+    } else {
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
     $data = array(
         "student_name" => $student_name,
@@ -33,5 +45,5 @@ if (strlen($student_name) < 5) {
 
 }
 
-
+}
 ?>

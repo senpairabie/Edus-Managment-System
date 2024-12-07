@@ -22,11 +22,15 @@ $subject_id = filterRequest('subject_id');
             
               */
               WHERE 
-              c.subject_id = $subject_id
+              c.subject_id = :subject_id AND teacher_id = :teacher_id
               GROUP BY 
                   c.class_id";
 
-    $statement = $connect->query($query);
+    $statement = $connect->prepare($query);
+    $statement->execute([
+        ':subject_id' => $subject_id,
+        ':teacher_id' => $decoded->userId
+    ]);
     $classes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     if (!empty($classes)) {

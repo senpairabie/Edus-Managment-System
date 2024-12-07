@@ -1,6 +1,6 @@
 <?php
 
-include 'mailerMsg/mail.php';
+// include 'mailerMsg/mail.php';
 ///////////////////////////////
 //DESKTOP-32RL6R4\SQLEXPRESSc
 $dsn = "mysql:host=localhost;dbname=edus_managment_system";

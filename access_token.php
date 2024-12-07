@@ -16,7 +16,6 @@ function authenticate($token, $key) {
 
 $headers = getallheaders();
 if (!isset($headers['Authorization'])) {
-    http_response_code(401); 
     echo json_encode(["status" => "fail", "message" => "Token not provided."]);
     exit();
 }
@@ -25,7 +24,6 @@ $token = str_replace('Bearer ', '', $headers['Authorization']);
 $decoded = authenticate($token, $key); 
 
 if ($decoded === null) {
-    http_response_code(401); 
     echo json_encode(["status" => "fail", "message" => "Invalid token."]);
     exit();
 }
