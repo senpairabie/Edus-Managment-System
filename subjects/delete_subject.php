@@ -4,6 +4,8 @@ include '../access_token.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
+$connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
     sendResponse(405, "fail", "Method not allowed. Use DELETE.");
     exit();
@@ -11,13 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
 
 $inputData = json_decode(file_get_contents("php://input"), true);
 
-$subject_id = isset($inputData['subject_id']) ? $inputData['subject_id'] : null;
+if (!$inputData) {
+    sendResponse(400, "fail", "Invalid JSON format.");
+    exit();
+}
+
+$subject_id = isset($inputData['subject_id']) ? filter_var($inputData['subject_id'], FILTER_VALIDATE_INT) : null;
 $language = isset($inputData['language']) ? $inputData['language'] : "en";
 
-if (empty($subject_id)) {
+if (!$subject_id) {
     sendResponse(400, "fail", $language == "ar" 
-        ? "خطأ: الرجاء إدخال معرف المادة." 
-        : "Error: Please provide the subject ID.");
+        ? "خطأ: الرجاء إدخال معرف المادة صالح." 
+        : "Error: Please provide a valid subject ID.");
     exit();
 }
 

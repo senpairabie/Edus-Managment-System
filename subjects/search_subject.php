@@ -4,14 +4,19 @@ include '../access_token.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
-$searchTerm = filterRequest("search");
-$language = filterRequest("language");
+$searchTerm = filterRequestGet("search");
+$language = filterRequestGet("language");
 
 try {
-    $query = "SELECT * FROM `subjects` 
+    $query = "SELECT subject_id, teacher_id, 
+                     subject_title_en, subject_title_ar, 
+                     subject_description_en, subject_description_ar 
+              FROM `subjects` 
               WHERE `teacher_id` = :teacher_id 
-                AND (`subject_title` LIKE :search 
-                  OR `subject_description` LIKE :search)";
+                AND (`subject_title_en` LIKE :search 
+                  OR `subject_title_ar` LIKE :search 
+                  OR `subject_description_en` LIKE :search 
+                  OR `subject_description_ar` LIKE :search)";
 
     $stmt = $connect->prepare($query);
     $searchLike = '%' . $searchTerm . '%';
@@ -22,7 +27,16 @@ try {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($results) {
-        sendResponse(200, "success", $results);
+        $filteredResults = array_map(function($subject) use ($language) {
+            if ($language === "ar") {
+                unset($subject['subject_title_en'], $subject['subject_description_en']);
+            } elseif ($language === "en") {
+                unset($subject['subject_title_ar'], $subject['subject_description_ar']);
+            }
+            return $subject;
+        }, $results);
+
+        sendResponse(200, "success", $filteredResults);
     } else {
         sendResponse(404, "fail", $language == "ar" 
             ? "لم يتم العثور على أي مادة." 

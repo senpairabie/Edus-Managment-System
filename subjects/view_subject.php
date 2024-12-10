@@ -14,20 +14,30 @@ if (!isset($decoded->userId)) {
 }
 
 try {
-    $query = "SELECT `subject_id`, `subject_title`, `subject_description` 
+    $query = "SELECT `subject_id`, `subject_title_ar`, `subject_title_en`, 
+                     `subject_description_ar`, `subject_description_en` 
               FROM `subjects` 
               WHERE `teacher_id` = :teacher_id";
 
     $stmt = $connect->prepare($query);
-    $stmt->bindParam(':teacher_id', $decoded->userId);
+    $stmt->bindParam(':teacher_id', $decoded->userId, PDO::PARAM_INT);
     $stmt->execute();
 
     $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($subjects) > 0) {
+        $filteredSubjects = array_map(function($subject) use ($language) {
+            if ($language === "ar") {
+                unset($subject['subject_title_en'], $subject['subject_description_en']);
+            } elseif ($language === "en") {
+                unset($subject['subject_title_ar'], $subject['subject_description_ar']);
+            }
+            return $subject;
+        }, $subjects);
+
         sendResponse(200, "success", $language == "ar" 
             ? "تم جلب المواد بنجاح." 
-            : "Subjects retrieved successfully.", $subjects);
+            : "Subjects retrieved successfully.", $filteredSubjects);
     } else {
         sendResponse(404, "fail", $language == "ar" 
             ? "لا توجد مواد مسجلة لهذا المدرس." 

@@ -62,7 +62,7 @@ $mail->Body = '
         <div class="container">
             <h2>Edus Managment System</h2>
             <p>لإعادة تعيين كلمة المرور، يرجى النقر على الزر أدناه:</p>
-            <a href="http://localhost/edus_managment_system/auth/forgotPassword/update_password.php?token=' . urlencode($token) . '" class="button">إعادة تعيين كلمة المرور</a>
+            <a href="https://edus-ms.com/auth/forgotPasswordStudent/update_password.php?token=' . urlencode($token) . '" class="button">إعادة تعيين كلمة المرور</a>
         </div>
     </body>
     </html>
