@@ -61,9 +61,14 @@ function generateRandomToken($length) {
     .=$characters[rand(0, $characterCount - 1)]; } return $token; } 
     
     
+    function sendResponse($statusCode, $status, $message) {
+        http_response_code($statusCode); 
+        echo json_encode(array("status" => $status, "message" => $message));
+    }
 
-function insertData($table, $data, $json = true)
+function insertData($table, $data , $language)
     {
+        $json = true;
         global $connect;
         foreach ($data as $field => $v)
             $ins[] = ':' . $field;
@@ -79,10 +84,16 @@ function insertData($table, $data, $json = true)
         $count = $stmt->rowCount();
         if ($json == true) {
             if ($count > 0) {
-                echo json_encode(array("status" => "success" , "message" => "Added successfully"));
+                http_response_code(201); 
+                echo json_encode(array("status" => "success" , "message" => $language == "ar"
+                ? "تمت الاضافة بنجاح. " 
+                : "Added Successfully."));
                 
             } else {
-                echo json_encode(array("status" => "failed"));
+                http_response_code(500); 
+                echo json_encode(array("status" => "failed" , "message" => $language == "ar"
+                ? "خطأ: حدث خطأ غير متوقع." 
+                : "Error: An unexpected error occurred."));
             }
         }
         return $count;
@@ -164,8 +175,10 @@ function getClasses($teacher_id) {
     $classes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     if (!empty($classes)) {
+        http_response_code(200); 
         echo json_encode(["status" => "success", "data" => $classes]);
     } else {
+        http_response_code(204); 
         echo json_encode(["status" => "fail", "message" => "No data found."]);
     }
 }
@@ -188,8 +201,10 @@ function getClasses2($class_id , $teacher_id) {
     $class = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     if (!empty($class)) {
+        http_response_code(200); 
         echo json_encode(["status" => "success", "data" => $class]);
     } else {
+        http_response_code(204); 
         echo json_encode(["status" => "fail", "message" => "No data found."]);
     }
 }

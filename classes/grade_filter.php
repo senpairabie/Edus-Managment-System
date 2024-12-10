@@ -28,8 +28,10 @@ $statement->execute([
 $classes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 if (!empty($classes)) {
+    http_response_code(200); 
     echo json_encode(["status" => "success", "data" => $classes]);
 } else {
+    http_response_code(204); 
     echo json_encode(["status" => "fail", "message" => "No data found."]);
 }
 

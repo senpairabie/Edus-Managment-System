@@ -24,8 +24,10 @@ if (strlen($full_name) < 3) {
     $cont = $stat->rowCount();
     
     if ($cont > 0) {
-        $errorMsg = ($language == "ar") ? "البريد الإلكتروني أو رقم الهاتف موجود بالفعل." : "Email or phone number already exists.";
-        echo json_encode(array("status" => "fail", "message" => $errorMsg));
+        $errorMsg = ($language == "ar") ? "البريد الإلكتروني أو رقم الهاتف موجود بالفعل." 
+        : "Email or phone number already exists.";
+        http_response_code(500); 
+        echo json_encode(array("status" => "failed", "message" => $errorMsg));
     } else {
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         try {
@@ -33,14 +35,20 @@ if (strlen($full_name) < 3) {
             $statement->execute(array($full_name, $email, $phone, $hashedPassword, $token, $location));
             $count = $statement->rowCount();
             if ($count > 0) {
-                $successMsg = ($language == "ar") ? "تم إنشاء الحساب بنجاح." : "Account created successfully.";
+                $successMsg = ($language == "ar") ? "تم إنشاء الحساب بنجاح." 
+                : "Account created successfully.";
+                http_response_code(201); 
                 echo json_encode(array("status" => "success", "message" => $successMsg));   
             } else {
-                $errorMsg = ($language == "ar") ? "خطأ: حدث خطأ أثناء إنشاء الحساب." : "Error: Something went wrong while creating account.";
+                $errorMsg = ($language == "ar") ? "خطأ: حدث خطأ أثناء إنشاء الحساب." 
+                : "Error: Something went wrong while creating account.";
+                http_response_code(500); 
                 echo json_encode(array("status" => "fail", "message" => $errorMsg));
             }
         } catch (PDOException $e) {
-            $errorMsg = ($language == "ar") ? "خطأ: حدث خطأ أثناء إنشاء الحساب." : "Error: Something went wrong while creating account.";
+            $errorMsg = ($language == "ar") ? "خطأ: حدث خطأ أثناء إنشاء الحساب."
+             : "Error: Something went wrong while creating account.";
+             http_response_code(500); 
             echo json_encode(array("status" => "fail", "message" => $errorMsg));
         }
     }

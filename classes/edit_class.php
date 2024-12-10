@@ -22,15 +22,18 @@ if (!empty($class_title) || !empty($Class_description) || !empty($grade_id)
 if (strlen($class_title) < 3) {
     $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون اسم الفصل أكثر من 3 أحرف." 
     : "Error: Class title must be more than 3 characters.";
+    http_response_code(400); 
     echo json_encode(array("status" => "fail", "message" => $errorMsg));
 } elseif (strlen($Class_description) < 20) {
     $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون وصف الفصل أكثر من 20 حرفًا." 
     : "Error: Class description must be more than 20 characters.";
+    http_response_code(400); 
     echo json_encode(array("status" => "fail", "message" => $errorMsg));
 } elseif (empty($class_title) || empty($Class_description) || empty($grade_id) 
 || empty($semester_id) || empty($subject_id)){
     $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة." 
     : "Error: Please fill in all required fields.";
+    http_response_code(400); 
     echo json_encode(array("status" => "fail", "message" => $errorMsg));
     exit;
 } else {

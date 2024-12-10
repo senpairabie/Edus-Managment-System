@@ -22,7 +22,7 @@ if (strlen($grade_level	) < 3) {
         "grade_description" => $grade_description,
         
     );
-    insertData("grades", $data);
+    insertData("grades", $data , $language);
 
 }
 ?>

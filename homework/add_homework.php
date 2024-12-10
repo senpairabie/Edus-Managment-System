@@ -22,7 +22,7 @@ if (strlen($assignment_title) < 5) {
         "class_id" => $class_id,
         "due_date" => $due_date
     );
-    insertData("homework", $data);
+    insertData("homework", $data ,$language);
 
 }
 

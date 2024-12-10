@@ -20,6 +20,7 @@ try {
 
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
 
     if ($results) {
         sendResponse(200, "success", $results);
@@ -33,11 +34,6 @@ try {
     sendResponse(500, "fail", $language == "ar" 
         ? "خطأ: حدث خطأ غير متوقع." 
         : "Error: An unexpected error occurred.");
-}
-
-function sendResponse($statusCode, $status, $data) {
-    http_response_code($statusCode);
-    echo json_encode(array("status" => $status, "data" => $data));
 }
 
 function logError($error) {

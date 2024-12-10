@@ -14,8 +14,10 @@ function deleteData($table, $where, $json = true)
     $count = $stmt->rowCount();
     if ($json == true) {
         if ($count > 0) {
+            http_response_code(202); 
             echo json_encode(array("status" => "Class deleted successfully"));
         } else {
+            http_response_code(400); 
             echo json_encode(array("status" => "Failed to delete class"));
         }
     }
