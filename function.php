@@ -8,6 +8,29 @@ function filterRequest($requestName) {
 function filterRequestGet($requestName) {
     return htmlspecialchars(strip_tags($_GET[$requestName]));
 }
+function filterRequestDelete($requestName) {
+    
+    $rawData = file_get_contents("php://input");
+
+    $data = json_decode($rawData, true);
+
+    if (isset($data[$requestName])) {
+        return htmlspecialchars(strip_tags($data[$requestName]));
+    } else {
+        return null; 
+    }
+}
+function filterRequestPut($requestName) {
+    $rawData = file_get_contents("php://input");
+
+    $data = json_decode($rawData, true);
+
+    if (isset($data[$requestName])) {
+        return htmlspecialchars(strip_tags($data[$requestName]));
+    } else {
+        return null; 
+}}
+
 
 function createJwt($userId, $key) {
     $payload = [
@@ -144,52 +167,14 @@ function getGrades() {
         echo json_encode(["status" => "fail", "message" => "No data found."]);
     }
 }
-function getClasses($teacher_id) {
-    global $connect;
-    $query = "SELECT 
-                  c.class_title AS ClassTitle, 
-                  c.grade_id AS Grade,
-                  c.semester_id AS Semester,
-                  COUNT(DISTINCT s.student_id) AS StudentNo,
-                  c.class_date AS DATE,
-                  c.start_time AS Start_Time,
-                  c.start_time AS End_Time
 
-
-              FROM 
-                  classes c 
-                   LEFT JOIN 
-                  students s
-              ON 
-                  s.grade_id = c.grade_id
-                  /* LEFT JOIN 
-                  groups gr
-              ON 
-                  s.group_id = gr.group_id
-            
-              */
-              WHERE 
-              c.teacher_id = $teacher_id
-              GROUP BY 
-                  c.class_id";
-                  
-
-    $statement = $connect->query($query);
-    $classes = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    if (!empty($classes)) {
-        http_response_code(200); 
-        echo json_encode(["status" => "success", "data" => $classes]);
-    } else {
-        http_response_code(204); 
-        echo json_encode(["status" => "fail", "message" => "No data found."]);
-    }
-}
 function getClasses2($class_id , $teacher_id) {
     global $connect;
     $query = "SELECT 
-                   class_title,
-                   class_description, 
+                   class_title_ar,
+                   class_title_en,
+                   class_description_ar,
+                   class_description_en, 
                    grade_id,
                    semester_id,
                    subject_id,

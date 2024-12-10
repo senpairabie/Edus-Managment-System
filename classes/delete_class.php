@@ -3,8 +3,8 @@ include '../connect.php';
 include '../access_token.php';
 
 
-$class_id = filterRequest("class_id");
-$language = filterRequest("language");
+$class_id = filterRequestDelete("class_id");
+$language = filterRequestDelete("language");
 
 function deleteData($table, $where, $json = true)
 {

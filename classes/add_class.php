@@ -14,17 +14,27 @@ $start_time = filterRequest("start_time");
 $end_time = filterRequest("end_time");
 
 
-if (strlen($class_title) < 3) {
+if (strlen($class_title_ar) < 3) {
     $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون اسم الفصل أكثر من 3 أحرف."
      : "Error: Class title must be more than 3 characters.";
      http_response_code(400); 
     echo json_encode(array("status" => "failed", "message" => $errorMsg));
-} elseif (strlen($Class_description) < 10) {
+}elseif(strlen($class_title_en) < 3) {
+    $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون اسم الفصل أكثر من 3 أحرف."
+     : "Error: Class title must be more than 3 characters.";
+     http_response_code(400); 
+    echo json_encode(array("status" => "failed", "message" => $errorMsg));
+} elseif (strlen($Class_description_ar) < 10) {
     $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون وصف الفصل أكثر من 10 حرفًا."
      : "Error: Class description must be more than 10 characters.";
      http_response_code(400); 
     echo json_encode(array("status" => "failed", "message" => $errorMsg));
-} elseif (empty($class_title) || empty($Class_description) || empty($grade_id) 
+} elseif (strlen($Class_description_en) < 10) {
+    $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون وصف الفصل أكثر من 10 حرفًا."
+     : "Error: Class description must be more than 10 characters.";
+     http_response_code(400); 
+    echo json_encode(array("status" => "failed", "message" => $errorMsg));
+} elseif (empty($class_title_ar) || empty($class_title_en)|| empty($Class_description_ar) || empty($Class_description_en) || empty($grade_id) 
 || empty($semester_id) || empty($subject_id) || empty($class_date) || empty($start_time) || empty($end_time) ) {
     
     $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة."
@@ -36,8 +46,10 @@ if (strlen($class_title) < 3) {
 
     $data = array(
         "teacher_id" => $decoded->userId,
-        "class_title" => $class_title,
-        "Class_description" => $Class_description,
+        "class_title_ar" => $class_title_ar,
+        "class_title_en" => $class_title_en,
+        "Class_description_ar" => $Class_description_ar,
+        "Class_description_en" => $Class_description_en,
         "grade_id" => $grade_id,
         "semester_id" =>  $semester_id,
         "subject_id" => $subject_id,
