@@ -1,8 +1,10 @@
 <?php
 include '../connect.php';
 include '../access_token.php';
-$class_title = filterRequest("class_title");
-$Class_description = filterRequest("Class_description");
+$class_title_ar = filterRequest("class_title_ar");
+$class_title_en = filterRequest("class_title_en");
+$Class_description_ar = filterRequest("Class_description_ar");
+$Class_description_en = filterRequest("Class_description_en");
 $grade_id = filterRequest("grade_id");
 $semester_id = filterRequest("semester_id");
 $subject_id = filterRequest("subject_id");
