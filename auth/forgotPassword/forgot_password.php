@@ -69,7 +69,8 @@ $mail->Body = '
 ';
           
 if ($mail->send()) {
-    $successMsg = ($language == "ar") ? "تم إرسال رسالة إعادة تعيين كلمة المرور إلى بريدك الإلكتروني" : "Password reset message sent to your email";
+    $successMsg = ($language == "ar") ? "تم إرسال رسالة إعادة تعيين كلمة المرور إلى بريدك الإلكتروني"
+     : "Password reset message sent to your email";
     echo json_encode(array("status" => "success", "message" => $successMsg));
 } else {
     echo json_encode(array("status" => "fail", "message" => "Error: Message could not be sent."));

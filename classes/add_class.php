@@ -7,7 +7,9 @@ $grade_id = filterRequest("grade_id");
 $semester_id = filterRequest("semester_id");
 $subject_id = filterRequest("subject_id");
 $language = filterRequest("language");
-$class_time = filterRequest("class_time");
+$class_date = filterRequest("class_date");
+$start_time = filterRequest("start_time");
+$end_time = filterRequest("end_time");
 
 
 if (strlen($class_title) < 3) {
@@ -21,7 +23,7 @@ if (strlen($class_title) < 3) {
      http_response_code(400); 
     echo json_encode(array("status" => "failed", "message" => $errorMsg));
 } elseif (empty($class_title) || empty($Class_description) || empty($grade_id) 
-|| empty($semester_id) || empty($subject_id) ) {
+|| empty($semester_id) || empty($subject_id) || empty($class_date) || empty($start_time) || empty($end_time) ) {
     
     $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة."
      : "Error: Please fill in all required fields.";
@@ -37,7 +39,9 @@ if (strlen($class_title) < 3) {
         "grade_id" => $grade_id,
         "semester_id" =>  $semester_id,
         "subject_id" => $subject_id,
-        "class_time" => $class_time,    
+        "class_date" => $class_date,
+        "start_time" => $start_time,    
+        "end_time" => $end_time
     );
     insertData("classes", $data , $language);
 

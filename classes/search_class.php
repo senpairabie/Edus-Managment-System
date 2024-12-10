@@ -10,7 +10,9 @@ $language = filterRequest("language");
               c.class_title AS ClassTitle, 
               c.grade_id AS Grade,
               COUNT(DISTINCT s.student_id) AS StudentNo,
-              c.class_time AS Time
+              c.class_date AS DATE,
+              c.start_time AS Start_Time,
+              c.start_time AS End_Time
           FROM 
               classes c 
               LEFT JOIN 

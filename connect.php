@@ -1,4 +1,5 @@
 <?php
+include 'mailerMsg/mail.php';
 
 // include 'mailerMsg/mail.php';
 ///////////////////////////////
