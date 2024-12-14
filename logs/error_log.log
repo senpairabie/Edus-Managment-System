@@ -39,4 +39,22 @@ SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in you
               c.class_id' at line 19SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'GROUP BY 
               c.class_id' at line 19SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'GROUP BY 
               c.class_id' at line 19SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'GROUP BY 
-              c.class_id' at line 19
+              c.class_id' at line 19SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.start_time' in 'field list'SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.start_time' in 'field list'SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.start_time' in 'field list'SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.start_time' in 'field list'SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.start_time' in 'field list'SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.start_time' in 'field list'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM 
+              classes c 
+              LEFT JOIN 
+              stud...' at line 8SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM 
+              classes c 
+              LEFT JOIN 
+              stud...' at line 8SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM 
+              classes c 
+              LEFT JOIN 
+              stud...' at line 8SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM 
+              classes c 
+              LEFT JOIN 
+              stud...' at line 8SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM 
+              classes c 
+              LEFT JOIN 
+              stud...' at line 8SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM 
+              classes c 
+              LEFT JOIN 
+              stud...' at line 8

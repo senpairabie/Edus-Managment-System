@@ -1,6 +1,12 @@
 <?php
 include '../connect.php';
 include '../access_token.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405); // Method Not Allowed
+    echo json_encode(["status" => "fail", "message" => "Invalid request method. Only POST requests are allowed."]);
+    exit;
+}
 $class_title_ar = filterRequest("class_title_ar");
 $class_title_en = filterRequest("class_title_en");
 $Class_description_ar = filterRequest("Class_description_ar");
@@ -10,9 +16,7 @@ $semester_id = filterRequest("semester_id");
 $subject_id = filterRequest("subject_id");
 $language = filterRequest("language");
 $class_date = filterRequest("class_date");
-$start_time = filterRequest("start_time");
-$end_time = filterRequest("end_time");
-
+$class_time = filterRequest("class_time");
 
 if (strlen($class_title_ar) < 3) {
     $errorMsg = ($language == "ar") ? "خطأ: يجب أن يكون اسم الفصل أكثر من 3 أحرف."
@@ -35,7 +39,7 @@ if (strlen($class_title_ar) < 3) {
      http_response_code(400); 
     echo json_encode(array("status" => "failed", "message" => $errorMsg));
 } elseif (empty($class_title_ar) || empty($class_title_en)|| empty($Class_description_ar) || empty($Class_description_en) || empty($grade_id) 
-|| empty($semester_id) || empty($subject_id) || empty($class_date) || empty($start_time) || empty($end_time) ) {
+|| empty($semester_id) || empty($subject_id) || empty($class_date) || empty($class_time)  ) {
     
     $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة."
      : "Error: Please fill in all required fields.";
@@ -54,8 +58,7 @@ if (strlen($class_title_ar) < 3) {
         "semester_id" =>  $semester_id,
         "subject_id" => $subject_id,
         "class_date" => $class_date,
-        "start_time" => $start_time,    
-        "end_time" => $end_time
+        "class_time" => $class_time,    
     );
     insertData("classes", $data , $language);
 
