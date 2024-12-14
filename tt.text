@@ -1,0 +1,94 @@
+<?php
+include '../connect.php';
+include '../access_token.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405); // Method Not Allowed
+    echo json_encode(["status" => "fail", "message" => "Invalid request method. Only POST requests are allowed."]);
+    exit;
+}
+$student_id = filterRequest("student_id");
+$class_id = filterRequest("class_id");
+$language = filterRequest('language');
+
+if (empty($student_id) || empty($class_id) || empty($language)) {
+    
+    $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة." : "Error: Please fill in all required fields.";
+    echo json_encode(array("status" => "fail", "message" => $errorMsg));
+} else {
+    /* $token = generateRandomToken(100); */
+
+    $stat = $connect->prepare("SELECT student_id FROM `class_students` WHERE student_id = ? AND class_id = ?");
+    $stat->execute(array($student_id , $class_id));
+    $cont = $stat->rowCount();
+    
+    if ($cont > 0) {
+        $errorMsg = ($language == "ar") ? "هذا الطالب موجود بالفعل" : "This student already exists.";
+        http_response_code(400);
+        echo json_encode(array("status" => "fail", "message" => $errorMsg));
+    } else {
+
+    $data = array(
+        "student_id" => $student_id,
+        "class_id" => $class_id 
+    );
+    insertData("class_students", $data , $language);
+
+}
+
+}?>
+
+
+<?php
+/* include '../connect.php';
+include '../access_token.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(["status" => "fail", "message" => "Invalid request method. Only POST requests are allowed."]);
+    exit;
+}
+
+
+$requestData = json_decode(file_get_contents("php://input"), true);
+
+$student_ids = $requestData['student_ids'] ?? null;
+$class_id = $requestData['class_id'] ?? null;
+$language = $requestData['language'] ?? null;
+
+if (empty($student_ids) || empty($class_id) || empty($language)) {
+    $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة." : "Error: Please fill in all required fields.";
+    echo json_encode(array("status" => "fail", "message" => $errorMsg));
+    exit;
+}
+
+$inserted = [];
+$skipped = [];
+
+foreach ($student_ids as $student_id) {
+    $stat = $connect->prepare("SELECT student_id FROM `class_students` WHERE student_id = ? AND class_id = ?");
+    $stat->execute(array($student_id, $class_id));
+    $cont = $stat->rowCount();
+
+    if ($cont > 0) {
+        $skipped[] = $student_id;
+    } else {
+        $data = array(
+            "student_id" => $student_id,
+            "class_id" => $class_id
+        );
+        insertData("class_students", $data, $language);
+        $inserted[] = $student_id;
+    }
+}
+
+$response = array(
+    "status" => "success",
+    "inserted" => $inserted,
+    "skipped" => $skipped,
+    "message" => ($language == "ar") ? "تمت المعالجة بنجاح." :
+    "Processing completed successfully."
+);
+
+echo json_encode($response); */
+?>
