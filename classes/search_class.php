@@ -55,6 +55,7 @@ if($language == "ar"){
              GROUP BY 
                  c.class_id";
    }
+   if(!empty($searchTerm) & !empty($language) ){
 try{
 $stmt = $connect->prepare($query);
 $searchLike = '%' . $searchTerm . '%';
@@ -76,6 +77,13 @@ logError($e->getMessage());
 sendResponse(500, "fail", $language == "ar" 
     ? "خطأ: حدث خطأ غير متوقع." 
     : "Error: An unexpected error occurred.");
+}
+}
+else{
+    $errorMsg = ($language == "ar") ? "خطأ: الرجاء ملء جميع الحقول المطلوبة."
+     : "Error: Please fill in all required fields.";
+     http_response_code(400); 
+    echo json_encode(array("status" => "failed", "message" => $errorMsg));
 }
 
 
